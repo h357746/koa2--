@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <button id="connect">链接</button>
+    <button id="send">发送数据</button>
+    从服务端接受的数据如下;<br />
+
+    <span id="recv"></span>
+    <script>
+        var connect = document.querySelector('#connect')
+        var send = document.querySelector('#send')
+        var recv = document.querySelector('#recv')
+        let wss = null
+        connect.onclick = function () {
+             ws = new WebSocket('ws://localhost:9998')
+            ws.onopen = () => {
+                console.log('链接成功')
+            }
+            ws.onmessage = msg => {
+                console.log('接受到从服务端发送过来的数据了', +msg.data)
+                recv.innerHTML = msg.data
+            }
+            ws.onclose = () => {
+                console.log('链接失败')
+            }
+        }
+        send.onclick = function () {
+            ws.send(JSON.stringify({
+                action:'fullScreen',
+                socketType: 'trendData',
+                chartName: 'trend',
+                value: ''
+            }))
+        }
+    </script>
+</body>
+
+</html>
